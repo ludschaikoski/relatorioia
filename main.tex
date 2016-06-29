@@ -1,0 +1,359 @@
+\documentclass[12pt, a4paper, english, brazil]{abntex2}
+\usepackage{cmap}				
+\usepackage{lmodern}			
+\usepackage[T1]{fontenc}		 
+\usepackage[utf8]{inputenc}		 
+\usepackage{indentfirst}		
+\usepackage{color}				
+\usepackage{graphicx}			
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{lipsum}			
+\usepackage{float}
+\usepackage[brazilian,hyperpageref]{backref}	 
+\usepackage[alf]{abntex2cite}	
+
+
+\titulo{ Inteligência Artificial\\ PROJETO 3 - Pacman utilizando Algorítimos Genéticos\\ Prof. Dr. Carlos N. Silla Jr.}
+\autor{Carolina Lourenço dos Santos \\ Ludmila Schaikoski Sutir}
+
+\data{Junho de 2016}
+\instituicao{
+  UNIVERSIDADE TECNOLÓGICA FEDERAL DO PARANÁ
+}
+
+\preambulo{Relatório referente ao terceiro projeto da disciplina Inteligência Artificial}
+
+\makeatletter
+\hypersetup{
+		pdftitle={\@title}, 
+		pdfauthor={\@author},
+    	pdfsubject={\imprimirpreambulo},
+	    pdfcreator={LaTeX with abnTeX2},
+		pdfkeywords={abnt}{latex}{abntex}{abntex2}{relatório técnico}, 
+		colorlinks=true,       	
+    	linkcolor=black,        
+    	citecolor=black,        
+    	filecolor=black,      	
+		urlcolor=black,
+		bookmarksdepth=4
+}
+
+\makeatother
+\setlength{\parindent}{1.3cm}
+\setlength{\parskip}{0.2cm} 
+\makeindex
+
+
+\begin{document}
+
+\frenchspacing 
+\imprimircapa
+\imprimirfolhaderosto*
+
+\begin{resumo}
+
+ \vspace{\onelineskip}
+ \noindent
+ \textbf{Palavras-chaves}: Pacman. Algorítimos Genéticos. Inteligência Artificial.
+\end{resumo}
+
+\pdfbookmark[0]{\contentsname}{toc}
+\tableofcontents*
+\textual
+
+\chapter{O problema}
+Para o primeiro trabalho da disciplina, os alunos deveriam desenvolver um jogador automático de PacMan, os alunos notaram que, apesar de seu esforço e testes realizados, o jogador que a equipe desenvolveu acabou não obtendo resultados muito bons ao jogar com jogadores de outras equipes.
+Houve então a possibilidade da utilização da plataforma ECJ 23, que é muito usada na área de algorítimos genéticos, para realizar testes e descobrir qual a melhor combinação de heurísticas desenvolvidas pelos alunos para o jogador do PacMan de forma automatizada. Dessa forma, para solucionar o problema encontrado, foi proposto utilizar as técnicas de computação evolutiva (Algoritmos genéticos) para otimizar a escolha de quais heurísticas (e seus respectivos pesos) devem ser utilizadas no Pacman\footnote{http://ead.cp.utfpr.edu.br/moodle/pluginfile.php/148429/mod\_resource/content/0/Intelig\%C3\%AAncia\%20Artificial\%20-\%20Aula\%2014\%20-\%203\%C2\%BA\%20Projeto\%20-\%20AG\%20no\%20Pacman.pdf}.
+
+
+\chapter{Algorítimos Genéticos}
+De acordo com \cite{algGen}, "Os algoritmos genéticos utilizam conceitos provenientes do princípio de seleção
+natural para abordar uma série ampla de problemas, em especial de otimização.
+Robustos, genéricos e facilmente adaptáveis, consistem de uma técnica amplamente
+estudada e utilizada em diversas áreas".
+Para este trabalho, os algorítimos genéticos foram aplicados ao jogo Pacman, com o intuito de encontrar o melhor jogador através da combinação de diferentes fatores.
+Tradicionalmente existem 7 etapas principais para a aplicação dos alogrítimos genéticos, são elas: inicialização, avaliação, seleção, cruzamento, mutação, atualização e finalização (Figura \ref{fig:algGen}).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 14cm]{CicloAlgoritmoPadrao.jpg}
+\caption{Etapas Algorítimos Genéticos. Retirado de \cite{algEvo}}
+\label{fig:algGen}
+\end{figure}
+
+Cabe lembrar o significado de alguns dos termos que podem ser usados durante esse trabalho [\cite{algEvo}]:
+\begin{itemize}
+\item Cromossomo: estrutura de dados formada por uma sequência de genes, tem a função de codificar uma solução para o problema.
+
+\item Gene: componente do cromossomo responsável pela codificação de um único parâmetro, ou seja, um elemento do vetor que representa o cromossomo.
+
+\item Alelo:  são os dados que um gene pode assumir.
+
+\item Lócus: é a posição ocupada por um gene em um cromossomo.
+
+\item Genótipo: é uma estrutura de dados que representa uma solução possível à um determinado problema.
+
+\item Fenótipo: decodificação de um ou mais cromossomos.
+
+\item Seleção natural: são selecionados somente os indivíduos com mais chances de gerarem descendentes.
+
+\item Herança genética: é onde ocorre o crossover, ou seja, ocorre a troca de material genético. 
+
+\item Mutação: ocorre diretamente no indivíduo que irá compor a próxima geração. O indivíduo sofre uma série de mudanças aleatórias em seu material genético, de forma a estar mais apto dentro daquela população.
+
+\end{itemize}
+
+
+\chapter{Modificações feitas no Projeto 1 - Pacman}
+Foram feitas algumas modificações no projeto original, que se tratou do desenvolvimento de um jogador automático para o Pacman. Essas mudanças existiram tanto nos códigos já feitos, mas também houve acréscimo de classes para que as técnicas de algorítimos genéticos pudessem ser aplicadas.
+\section{Modificações no projeto original}
+Não houve necessidade de grandes mudanças em códigos que já haviam sido criados no primeiro projeto.  As únicas mudanças foram: a modificação dos métodos da classe \textit{Heuristicas}, onde estão localizados os métodos com cada heurística desenvolvida (que serão especificadas no capítulo \ref{chapter:heuristicas}) e a mudança de tipo do vetor de pesos das heurísticas, que antes era um vetor de double agora é um vetor de int. A modificação realizada nesse método foi que os métodos não podem mais ser estáticos para serem utilizados nos algorítimos genéticos. A Figura \ref{fig:original} mostra um dos métodos antes da modificação, e a Figura \ref{fig:naoStatic} demonstra como os métodos foram adaptados.
+
+\begin{figure}[H]
+\centering
+\includegraphics{original.JPG}
+\caption{Método do projeto original}
+\label{fig:original}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{naoStatic.JPG}
+\caption{Método modificado}
+\label{fig:naoStatic}
+\end{figure}
+
+\chapter{Heurísticas utilizadas}
+\label{chapter:heuristicas}
+
+
+    \section{Prevendo a presença dos fantasmas}
+    Utilizando o método já existente \textil {getPossibleGhostProjections} que faz uma simulação com as posições dos fantasmas comparando a localização atual do PacMan com os fantasmas. Para o número de estados escolhemos o valor 2. Com o método \textil{isFinal}, foi aferido que através de um laço se o estado em questão é final ou não. Quando o estado for final, o Pacman encontrará o fantasma. 
+
+\begin{figure}[H]
+\centering
+\caption{Heuristica para Fugir dos Fantasmas com Antecedência}
+\includegraphics[height = 10cm]{heuristica6.png}
+\label{fig:heuristica6}
+\end{figure}   
+
+
+
+    \section{Continuar em um caminho se houver bolinha na próxima casa}
+    Esta heurística está implementada na heuristica2 da classe “Heuristicas” e faz com que o PacMan escolha o caminho onde tenha uma bolinha, ao invés de pegar  caminhos vazios. Para fazer  isso, foi necessário chegar nas  localizações do PacMan,e dos itens, através dos métodos \textil{getPacManLocation} e \textil{getDotLocations} respectivamente. Ao achar essas localizações, foi executada uma condição de verificação para saber se o PacMan comeria uma bolinha no próximo estado. Se fosse positivo, o retorno desse método seria um número negativo, caso contrário, o retorno seria zero. 
+
+\begin{figure}[H]
+\centering
+\caption{Heuristica para Escolher o Caminho Onde Tenha Itens}
+\includegraphics[height = 10cm]{heuristica7.png}
+\label{fig:heuristica7}
+\end{figure}   
+
+
+    \section{Quantidade de pontos acumulados no jogo}
+ Na heurística, uma variável chamada “pontos” recebe o resultado do método \textil{size()} encontrado através do método \textil{getDotLocations} para encontrar todos os pontos do tabuleiro, e calcula a quantidade de itens encontrados através do método \textil{size()}. A vantagem dessa heurística é que o PacMan sabe a quantidade exata de itens ainda existentes no jogo.
+
+
+
+    \section{Analisa o estado final, se foi morte ou vitória}
+ A heurística de estado final avalia se o próximo movimento o PacMan terminaria vitorioso (vivo) ou seria vencido. Para isso, foi implementada uma condição de verificação no método da classe Heurísticas, onde foi verificado se para o próximo estado o PacMan estaria perdendo, se sim, era atribuído um número muito grande ao placar, se não, o placar receberia o valor zero.
+ Dessa forma o PacMan sempre vai escolher o caminho com a menor pontuação,e evitará um estado final de morte. Foi utilizado o método estático \textil{isLosing} para fazer a avaliação deste cenário.
+    \begin{figure}[H]
+    \centering
+    \caption{Heurística de Estado Final: Vitória ou Derrota}
+    \includegraphics[height = 10cm]{heuristica2.png}
+    \label{fig:heuristica2}
+    \end{figure}
+%A heurística que calcula a distância média entre os itens restantes está localizada na classe Heurísticas, e se chama \textit{heuristica4}. A intenção é saber, para cada possibilidade do PacMan, qual movimento levará para uma concentração maior de itens. Para implementar essa heurística foi feito um laço que repetição para calcular a distância entre o PacMan e cada um dos itens através do método da distância euclidiana. Todas as distâncias serão somadas e o laço de repetição termina. Então esse somatório será dividido pelo número de itens, obtendo o valor da distância média dos itens restantes no tabuleiro.  
+
+    
+    \section{Analisa a proximidade dos itens restantes}
+ No método heuristica5, a heurística utiliza a localização atual do PacMan e a localização de cada item do tabuleiro através dos métodos \textil{getPacManLocation} e \textil{getDotLocations}, respectivamente. Com os resultados dessas localizações, é feito um laço de repetição onde é calculada a distância entre o PacMan e cada um dos itens através do método \textil{euclideanDistance}.
+ O valor da distância encontrado e é armazenado em uma variável e passa por uma condição para verificar qual a menor distância. O laço de repetição termina quando forem calculadas as distâncias para cada item do tabuleiro.
+  
+ \begin{figure}[H]
+ \centering
+ \caption{Heurística para Calcular a Proximidade dos Itens}
+ \includegraphics[height = 10cm]{heuristica3.png}
+ \label{fig:heuristica3}
+ \end{figure}
+    
+
+    \section{Analisa a distância media entre dos itens que estão sobrando}
+Esta heurística que calcula a distância média entre as bolinhas restantes. A intenção é saber,qual movimento levará para uma concentração maior de itens. Na implementação dessa heurística foi utilizadas um laço de repetição para calcular a distância entre o PacMan e cada um dos itens através do método da distância euclidiana. As distâncias serão somadas e o laço de repetição termina. Então esse somatório foi dividido pelo número de itens, obtendo o valor da distância média dos itens restantes no tabuleiro.
+
+    \begin{figure}[H]
+    \centering
+    \caption{Heurística para o Número de Itens Existentes no Jogo}
+    \includegraphics[height = 10cm]{heuristica1.png}
+    \label{fig:heuristica1}
+    \end{figure}
+
+
+
+    \section{Continuar na linha ou coluna com maior numero de bolinhas }
+Nesse método foi trabalhado com as colunas (para movimentos \textit{UP} e \textit{DOWN}) ou as linhas (para movimentos \textit{RIGHT} e \textit{LEFT}) onde haveria o maior número de itens. Para isso, foi verificado se o último movimento do PacMan foi \textit{UP}, \textit{DOWN}, \textit{RIGHT} ou \textit{LEFT}. Caso tenha sido \textit{UP} ou \textit{DOWN},o laço de repetição e como uma verificação com um contador, a fim de verificar qual a coluna que possua mais itens. Se foi \textit{RIGHT} ou \textit{LEFT}, é feito o mesmo procedimento, porém, é encontrada a linha com mais itens. 
+
+\begin{figure}[H]
+\centering
+\caption{Heuristica para Achar a Linha ou Coluna Com Maior Número de Pontos}
+\includegraphics[height = 10cm]{heuristica8.png}
+\label{fig:heuristica8}
+\end{figure}  
+
+
+
+    \section{Analise da distância do fantasmas}
+Inicializado com os métodos \textit{getPacManLocation} e \textit{getGhostsLocations} em que são obtidas as localizações do PacMan e dos fantasmas, respectivamente. A partir daí foi utilizado laço de repetição para calcular a distância até cada um dos fantasmas. Ao encontrar cada distância, é avaliada qual delas é a maior, e esse resultado servirá como retorno do método. A intenção dessa heurística é manter o PacMan o mais distante possível dos fantasmas.
+\begin{figure}[H]
+\centering
+\caption{Heurística para Calcular a Distancia dos Fantasmas}
+\includegraphics[height = 10cm]{heuristica5.png}
+\label{fig:heuristica5}
+\end{figure}
+ 
+
+
+    \section{Evitando pequenos loops nas buscas}
+Com a tentativa de diminuir a possibilidade do PacMan ficar preso em uma curta sequência de movimentos repetidamente \textit{(loops)}, foi realizada uma condição para verificar o último movimento do PacMan e comparar com o próximo movimento possível que é incrementado a cada iteração do laço de repetição. Para isso foi utilizado o método \textit{getOpposite}. 
+Nesse método temos que se o último movimento do PacMan for igual ao oposto do movimento atual, é somado um valor na pontuação. Quanto maior a pontuação, pior é a jogada. Também é feita uma verificação se o oposto do movimento atual possui um fantasma com uma distância maior que dois movimentos. Caso contrário, o PacMan não pode realizar o movimento oposto. 
+
+
+
+\chapter{Experimentos}
+
+\section{Cenários e população}
+\label{section:cenarios}
+Foram criados dois cenários, o Cenário 01 está localizado no pacote \textit{Cenario01}, que por sua vez está localizado no pacote \textit{Genetico} que está no pacote \textit{player}. O cenário 01 consiste em um jogo com quatro fantasmas do tipo \textit{Basic}. O pacote do Cenário 02 também se localiza no pacote \textit{Genetico}, e consiste em um jogo com três fantasmas do tipo \textit{Basic} e um fantasma do tipo \textit{Stalker}.
+Na Figura \ref{fig:Cenario1} pode-se observar a configuração do cenário 01, que consiste em 4 fantasmas do tipo Basic, e na Figura \ref{fig:Cenario2} pode-se observar a configuração do Cenário 2. Foram definidas duas diferentes populações para cada cenário, sendo a primeira iniciada com 10 indivíduos e a segunda com 20 indivíduos. 
+
+\begin{figure}[H]
+\centering
+\includegraphics{fantasmas.JPG}
+\caption{Cenário 01: 4 Fantasmas Basic}
+\label{fig:Cenario1}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics{fantasmas1.jpg}
+\caption{Cenário 02: 3 Fantasmas Basic e 1 Fantasma Stalker}
+\label{fig:Cenario2}
+\end{figure}
+
+
+\section{Funções de fitness}
+Duas funções de fitness diferentes foram definidas, onde o Fitness 01 leva em conta os pontos obtidos pelo jogador, e o Fitness 02 leva em conta o nível que o jogador atinge antes de morrer. No projeto, para cada cenário citado na seção \ref{section:cenarios}, existem duas classes diferentes, cada uma com um fitness. Dessa forma, no pacote \textit{Cenario01} existem duas classes, uma com fitness 01 (\textit{Cenario01Fitness01}) e outra com fitness 02 (\textit{Cenario01Fitness02}).
+Os melhoresjogadores serão definidos a partir da pontuação mais alta obtida em cada fitness. 
+\begin{figure}[H]
+\centering
+\includegraphics[width=11cm]{fitness1.jpg}
+\caption{Fitness 01: Pontos}
+\label{fig:Fitness01}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=11cm]{fitness2.jpg}
+\caption{Fitness 01: Níveis}
+\label{fig:Fitness02}
+\end{figure}
+
+\section{Operadores de mutação e crossover}
+
+Os operadores de mutação utilizados tiveram duas diferentes configurações, a primeira com uma mutação de 1\% e a segunda com mutação de 5\%. Essa probabilidade de mutação define com que frequência a mutação ocorrerá, onde 100\% representa o tempo todo, e conforme a porcentagem diminui, a frequência diminui. Para os operadores de crossover, também houve dois tipos de configuração, a primeira utilizando o crossover tipo \textit{one} e a segunda utilizando o crossover tipo \textit{two}, que define que os genes entre dois pontos situados no cromossomo serão trocados uns com os outros\footnote{https://cvalcarcel.wordpress.com/2009/08/22/ecj-a-firstsimple-tutorial/}.
+
+\chapter{Resultados}
+\begin{itemize}
+\item Os testes dos experimentos do capítulo anterior foram realizados em multi-thread para uma execução mais rápida. 
+\item Os genomas estão no formatos de números inteiros e em um vetor de 10 posições, sendo que, a primeira posição representa a altura da profundidade de busca AStar e as outras nove posições representam o peso das heurísticas utilizadas.
+\item A heurística 2 só pode assumir os valores de 0 (desativada) e 1 (ativada) pois em nada interfere aumentar o peso para mais de 1, sendo que ela retorna infinito. 
+\end{itemize}
+Podemos ver a seguir as tabelas com os resultados obtidos. 
+
+
+\begin{centering}Tabela 1 - Cenário 01 Fitness 01
+\begin{figure}[H]
+\centering
+\includegraphics[width=16cm]{Tabela1.JPG}
+\end{figure}
+\end{centering}
+
+\begin{centering}Tabela 2 - Cenário 01 Fitness 02
+\begin{figure}[H]
+\centering
+\includegraphics[width=16cm]{Tabela2.JPG}
+\end{figure}
+\end{centering}
+
+
+\begin{centering}Tabela 3 - Cenário 02 Fitness 01
+\begin{figure}[H]
+\centering
+\includegraphics[width=16cm]{Tabela3.JPG}
+\end{figure}
+\end{centering}
+
+\begin{centering}Tabela 1 - Cenário 02 Fitness 02
+\begin{figure}[H]
+\centering
+\includegraphics[width=16cm]{Tabela4.JPG}
+\end{figure}
+\end{centering}
+
+\chapter{Considerações Finais}
+
+Para a nossa análise, consideramos o fitness 01, apesar que os dois fitness são bem parecidos, já que a quantidade de pontos (fitness 01) que o player conseguiu está ligado com a quantidade de levels (fitness 02) que ele chegou. Podemos observar os dados das tabelas anteriores da seguinte maneira:
+
+\begin{itemize}
+\item A taxa de mutação é inversamente proporcional ao tempo levado para chegar a um indivíduo ideal, dessa forma, quanto menor a taxa de mutação, mais tempo demorou até alcançar o melhor indivíduo.
+\item O tamanho da população segue o mesmo princípio da mutação, quanto mais indivíduos, mais fácil é chegar em um ideal, porém, isso deixa a evolução mais lenta em termos computacionais;
+\item O tipo de crossover também influencia no resultado do indivíduo ideal, conforme pode-se observar nas tabelas 1, 2, 3 e 4, o tipo de crossover Two conseguiu chegar mais rápido;
+\item Para cenários com quatro fantasmas basic a profundidade da busca é sempre baixa, em torno de 1 e 2, e em cenários com pelo menos três basic e um stalker a profundidade da busca é mais alta, acima de 3;
+\item Com crossover em Two e a mutação em 5\% sempre resulta nos melhores indivíduos e na maioria dos casos em menos gerações.
+\item O melhor jogador obtido através dos testes foi no Cenário 01, com Fitness 01 (pontos), população de 20 indivíduos, crossover tipo two (os genes entre dois pontos do cromossomo serão trocados uns com os outros) e mutação de 1\%. A altura da árvore AStar desse jogador foi 1.
+\end{itemize}
+
+\begin{centering}Tabela 5 - Resultados Projeto 1 x Projeto 3
+\begin{figure}[H]
+\centering
+\includegraphics[width=16cm]{tabelaCon.png}
+\end{figure}
+\end{centering}
+
+Houve uma diferença considerável entre os resultados obtidos através do ajuste de parâmetros manual e os parâmentros ajustados através do uso do algorítimo genético. Na Tabela 5 pode-se observar a diferença entre as duas configurações, e nota-se que o resultado obtido através dos algorítimos genéticos foi melhor do que o anterior, tanto no cenário 01 quanto no cenário 02. Podemos ver esses resultados na prática com as imagens a seguir.
+
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=5.0in]{conc03}
+\caption{Cenário 01 - Jogador Projeto 01}
+\label{FigCenario01}
+\end{figure}
+
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=5.0in]{conc04}
+\caption{Cenário 01 - Algoritmo Genético}
+\label{FigCenario02}
+\end{figure}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=5.0in]{conc01}
+\caption{Cenário 02 - Jogador Projeto 01}
+\label{FigCenario03}
+\end{figure}
+
+\begin{figure}[!ht]
+\centering
+\includegraphics[width=5.0in]{conc02}
+\caption{Cenário 02 - Algoritmo Genético}
+\label{FigCenario04}
+\end{figure}
+
+
+\bibliography{bib}
+\end{document}
